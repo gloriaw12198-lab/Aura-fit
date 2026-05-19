@@ -1,40 +1,33 @@
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="w-full bg-gray-900 text-white px-6 py-3 flex justify-between items-center shadow-md">
+    <nav className="flex items-center justify-between px-6 py-4 bg-black/60 backdrop-blur-md border-b border-gray-800">
+      <Link to="/" className="text-xl font-bold text-blue-400">
+        AuraFit
+      </Link>
 
-      {/* Logo */}
-      <h1 className="text-2xl font-bold tracking-wide">
-        🏋️ AuraFit
-      </h1>
+      <div className="flex gap-4 items-center">
+        <Link className="hover:text-blue-400" to="/">Home</Link>
+        <Link className="hover:text-blue-400" to="/dashboard">Dashboard</Link>
+        <Link className="hover:text-blue-400" to="/saved">Saved</Link>
 
-      {/* User Section */}
-      {user && (
-        <div className="flex items-center gap-3">
-
-          <img
-            src={user.photoURL}
-            alt="user"
-            className="w-9 h-9 rounded-full border"
-          />
-
-          <span className="hidden md:block text-sm text-gray-300">
-            {user.displayName}
-          </span>
-
+        {user ? (
           <button
             onClick={logout}
-            className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded-lg text-sm"
+            className="bg-red-500 px-3 py-1 rounded-lg hover:bg-red-600"
           >
             Logout
           </button>
-
-        </div>
-      )}
-
+        ) : (
+          <Link className="bg-blue-500 px-3 py-1 rounded-lg" to="/login">
+            Login
+          </Link>
+        )}
+      </div>
     </nav>
   );
 }

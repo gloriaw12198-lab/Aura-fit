@@ -1,27 +1,20 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/login";
-import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
+import { useEffect } from "react";
+import { BrowserRouter } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import AppRoutes from "./routes/AppRoutes";
+import { testFirestoreWrite } from "./tests/firestoreTest";
 
-function App() {
+export default function App() {
+  useEffect(() => {
+    testFirestoreWrite();
+  }, []);
+
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
+        <Navbar />
+        <AppRoutes />
+      </div>
     </BrowserRouter>
   );
 }
-
-export default App;

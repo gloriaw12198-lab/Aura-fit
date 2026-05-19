@@ -1,52 +1,27 @@
-import { useEffect, useState } from "react";
-import { getWeather } from "../api/weather";
-import { getFashionImage } from "../api/unsplash";
+import { Link } from "react-router-dom";
 
-function Home() {
-  const [weather, setWeather] = useState(null);
-  const [image, setImage] = useState("");
-
-  useEffect(() => { 
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    const weatherData = await getWeather("Nairobi");
-    const imageData = await getFashionImage();
-
-    setWeather(weatherData);
-    setImage(imageData);
-  };
-
+export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-4xl font-bold mb-6">
+    <div className="flex flex-col items-center justify-center text-center h-[80vh] px-6">
+      <h1 className="text-5xl font-bold text-blue-400">
         AuraFit
       </h1>
 
-      {weather && (
-        <div className="bg-white p-6 rounded-2xl shadow-xl max-w-md">
-          <img
-            src={image}
-            alt="fashion"
-            className="rounded-xl mb-4"
-          />
+      <p className="text-gray-300 mt-4 max-w-md">
+        Your smart outfit generator powered by weather + AI styling.
+      </p>
 
-          <h2 className="text-2xl font-bold">
-            {weather.name}
-          </h2>
-
-          <p className="mb-2">
-            {weather.main.temp}°C
-          </p>
-
-          <p>
-            Perfect weather for a stylish fit ✨
-          </p>
-        </div>
-      )}
+      <Link
+        to="/dashboard"
+        className="mt-6 bg-blue-500 px-6 py-3 rounded-xl hover:bg-blue-600"
+      >
+        Get Started
+      </Link>
     </div>
   );
 }
+  
 
-export default Home;
+      
+
+

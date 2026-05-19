@@ -1,15 +1,24 @@
-const ACCESS_KEY = "zIaz061_9dy8vpe40xPeICddX2FWoqrV-72Q2DhWOAA";
 
-export const getFitnessImages = async () => {
+import axios from "axios";
+const ACCESS_KEY = "zIaz061_9dy8vpe40xPeICddX2FWoqrV-72Q2DhWOAA"; 
+export const getOutfitImage = async (query) => {
   try {
-    const res = await fetch(
-      `https://api.unsplash.com/search/photos?query=fitness&client_id=${ACCESS_KEY}`
+    const res = await axios.get(
+      "https://api.unsplash.com/search/photos",
+      {
+        params: {
+          query,
+          per_page: 1,
+        },
+        headers: {
+          Authorization: `Client-ID ${ACCESS_KEY}`,
+        },
+      }
     );
 
-    const data = await res.json();
-    return data.results;
+    return res.data.results[0]?.urls?.regular;
   } catch (err) {
-    console.error(err);
-    return [];
+    console.error("Unsplash error:", err);
+    return null;
   }
 };

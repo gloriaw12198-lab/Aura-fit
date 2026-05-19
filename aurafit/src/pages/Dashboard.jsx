@@ -1,96 +1,142 @@
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getWeather } from "../api/weather";
-import { getFitnessImages } from "../api/unsplash";
+import { saveOutfit } from "../services/outfits";
+import { generateSmartOutfit } from "../api/outfitEngine";
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
 
-  const [weather, setWeather] = useState(null);
-  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [outfit, setOutfit] = useState(null);
 
-  useEffect(() => {
-    if (!user) navigate("/login");
-  }, [user, navigate]);
+  // 👕 Generate + Save + Show outfit
+  const handleSave = async () => {
+    if (!user) return;
 
-  useEffect(() => {
-    getWeather("Nairobi").then(setWeather);
-    getFitnessImages().then(setImages);
-  }, []);
+    setLoading(true);
+
+    try {
+      // 1. Generate outfit from weather + unsplash
+      const generated = await generateSmartOutfit("Nairobi");
+
+      // 2. Show immediately on UI
+      setOutfit(generated);
+
+      // 3. Save to Firestore
+      await saveOutfit(generated, user.uid);
+
+      alert("Outfit generated & saved 💾");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to generate outfit");
+    }
+
+    setLoading(false);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white p-6">
-
+    <div className="p-6 text-white">
       {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">🏋️ AuraFit</h1>
-
-        <div className="flex items-center gap-3">
-          <img
-            src={user?.photoURL}
-            className="w-10 h-10 rounded-full"
-          />
-          <span>{user?.displayName}</span>
-
-          <button
-            onClick={logout}
-            className="bg-red-500 px-3 py-1 rounded-lg"
-          >
-            Logout
-          </button>
+        <div>
+          <h1 className="text-3xl font-bold">
+            Welcome, {user?.displayName || "User"} 👋
+          </h1>
+          <p className="text-gray-400">
+            Smart Outfit Generator Dashboard
+          </p>
         </div>
+
+        <button
+          onClick={logout}
+          className="bg-red-500 px-4 py-2 rounded-lg"
+        >
+          Logout
+        </button>
       </div>
 
-      {/* GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {/* GENERATOR CARD */}
+      <div className="bg-gray-800 rounded-2xl p-6 shadow-lg">
+        <h2 className="text-xl font-bold mb-4">
+          Generate Outfit 🎯
+        </h2>
 
-        {/* ACTIVITY */}
-        <div className="bg-gray-800 p-5 rounded-xl">
-          <h2 className="text-xl font-semibold mb-2">🔥 Activity</h2>
-          <p>Steps: 7,450</p>
-          <p>Calories: 520 kcal</p>
-          <p>Workout: 35 min</p>
-        </div>
+        <p className="text-gray-400 mb-6">
+          Click below to generate a smart outfit using Weather + AI logic
+        </p>
 
-        {/* WEATHER */}
-        <div className="bg-gray-800 p-5 rounded-xl">
-          <h2 className="text-xl font-semibold mb-2">🌤 Weather</h2>
+        <button
+          onClick={handleSave}
+          disabled={loading}
+          className={`px-6 py-3 rounded-xl font-bold transition ${
+            loading
+              ? "bg-gray-600"
+              : "bg-green-500 hover:bg-green-600"
+          }`}
+        >
+          {loading ? "Generating..." : "Generate & Save Outfit"}
+        </button>
+      </div>
 
-          {weather ? (
-            <>
-              <p>City: {weather.name}</p>
-              <p>Temp: {weather.main.temp}°C</p>
-              <p>Condition: {weather.weather[0].main}</p>
-            </>
-          ) : (
-            <p>Loading weather...</p>
-          )}
-        </div>
+      {/* 👕 GENERATED OUTFIT DISPLAY */}
+      {outfit && (
+        <div className="mt-8 bg-gray-900 rounded-2xl p-6 shadow-lg">
+          <h2 className="text-2xl font-bold mb-2">
+            {outfit.title}
+          </h2>
 
-        {/* MOTIVATION */}
-        <div className="bg-gray-800 p-5 rounded-xl">
-          <h2 className="text-xl font-semibold mb-2">💪 Motivation</h2>
-          <p>"Discipline beats motivation."</p>
-        </div>
+          <p className="text-gray-400 mb-4">
+            🌡 {outfit.temperature}°C
+          </p>
 
-        {/* UNSPLASH */}
-        <div className="bg-gray-800 p-5 rounded-xl col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-xl font-semibold mb-3">📸 Fitness Gallery</h2>
+          {/* IMAGE */}
+          <img
+            src={outfit.image}
+            alt="outfit"
+            className="w-full h-64 object-cover rounded-xl"
+          />
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {images.slice(0, 8).map((img) => (
-              <img
-                key={img.id}
-                src={img.urls.small}
-                className="rounded-lg h-32 w-full object-cover"
-              />
+          {/* ITEMS */}
+          <div className="mt-4 flex flex-wrap gap-2">
+            {outfit.items?.map((item, i) => (
+              <span
+                key={i}
+                className="bg-gray-700 px-3 py-1 rounded-full text-sm"
+              >
+                {item}
+              </span>
             ))}
           </div>
         </div>
+      )}
 
+      {/* INFO SECTION */}
+      <div className="mt-8 grid md:grid-cols-3 gap-4">
+        <div className="bg-gray-900 p-4 rounded-xl">
+          <h3 className="font-bold">🌤 Weather-Based</h3>
+          <p className="text-gray-400 text-sm">
+            Uses real-time weather data
+          </p>
+        </div>
+
+        <div className="bg-gray-900 p-4 rounded-xl">
+          <h3 className="font-bold">🖼 Unsplash Images</h3>
+          <p className="text-gray-400 text-sm">
+            Real fashion outfit visuals
+          </p>
+        </div>
+
+        <div className="bg-gray-900 p-4 rounded-xl">
+          <h3 className="font-bold">💾 Firebase Saved</h3>
+          <p className="text-gray-400 text-sm">
+            Stored per user securely
+          </p>
+        </div>
       </div>
     </div>
   );
 }
+      
+     
+
+  
