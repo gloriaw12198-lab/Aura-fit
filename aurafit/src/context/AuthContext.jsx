@@ -5,6 +5,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth, provider } from "../services/firebase";
+import { createUserProfile } from "../services/users";
 
 const AuthContext = createContext();
 
@@ -25,6 +26,7 @@ export function AuthProvider({ children }) {
   const login = async () => {
     const result = await signInWithPopup(auth, provider);
     setUser(result.user);
+    await createUserProfile(result.user);
   };
 
   const logout = async () => {

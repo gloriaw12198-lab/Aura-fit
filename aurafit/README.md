@@ -1,16 +1,31 @@
-# React + Vite
+#  Aura-Fit
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aura-Fit is a modern AI-powered fashion assistant that helps users decide what to wear based on **weather conditions, style preferences, and AI-generated outfit suggestions**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+-  Live weather integration (OpenWeather API)
+-  AI outfit recommendations based on weather & mood
+-  Outfit preview generation
+-  User authentication (Firebase Auth)
+-  User profiles & saved outfits
+-  Responsive premium UI (mobile + desktop)
+-  Smooth animations with Framer Motion
+-  Explore fashion inspiration (Unsplash API)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+##  Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Frontend:** React (Vite)
+- **Backend:** Firebase
+- **APIs:** OpenWeather API, Unsplash API
+- **Styling:** Tailwind CSS / CSS Modules
+- **Animations:** Framer Motion
+- **Routing:** React Router DOM
+
+---
+
+## 📂 Project Structure

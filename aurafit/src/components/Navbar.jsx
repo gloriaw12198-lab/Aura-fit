@@ -9,6 +9,9 @@ export default function Navbar() {
       <Link to="/" className="text-xl font-bold text-blue-400">
         AuraFit
       </Link>
+      <Link to="/users" className="text-white">
+  Users
+</Link>
 
       <div className="flex gap-4 items-center">
         <Link className="hover:text-blue-400" to="/">Home</Link>

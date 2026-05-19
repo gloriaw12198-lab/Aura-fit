@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import Saved from "../pages/Saved";
 import ProtectedRoute from "../components/ProtectedRoute";
+import Users from "../pages/Users";
 
 export default function AppRoutes() {
   return (
@@ -19,6 +20,14 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+  path="/users"
+  element={
+    <ProtectedRoute>
+      <Users />
+    </ProtectedRoute>
+  }
+/>
 
       <Route
         path="/saved"
