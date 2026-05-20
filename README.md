@@ -19,13 +19,14 @@ Aura-Fit is a modern AI-powered fashion assistant that helps users decide what t
 
 ##  Tech Stack
 
-- **Frontend:** React (Vite)
-- **Backend:** Firebase
-- **APIs:** OpenWeather API, Unsplash API
-- **Styling:** Tailwind CSS / CSS Modules
-- **Animations:** Framer Motion
-- **Routing:** React Router DOM
+-  Tech Stack
+-  React (Vite)
+-  Tailwind CSS
+-  Firebase (Auth + Firestore)
+-  OpenWeather API
+-  Unsplash API
+-  React Router
 
----
-
-## 📂 Project Structure
+📁  Run Project
+    npm install
+    npm run dev
