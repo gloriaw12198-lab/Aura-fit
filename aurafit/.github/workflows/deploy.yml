@@ -1,4 +1,4 @@
-name: Deploy Aura-fit to GitHub Pages
+name: Deploy Aura-fit
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -38,16 +38,12 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: aurafit/dist
+          path: aurafit/dist   
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
-    environment:
-      name: github-pages
-
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - name: Deploy
         uses: actions/deploy-pages@v4
